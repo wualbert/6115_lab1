@@ -1,0 +1,6 @@
+                       ;6.115 Lab 1 Exercise 1 Functionally Equivalent Program
+                   ;Albert Wu
+                   
+0000: C2 90        clr 90h    ;Clears P1
+                   loop:
+0002: 80 FE            sjmp loop
