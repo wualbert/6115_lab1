@@ -11,6 +11,7 @@ start:
 	loop:					;loop over
 	  lcall getchr			;call subroutine "getchr" to get character from PC keyboard
 	  lcall sndchr			;call subroutine "sndchr" to print character on PC screen
+	  mov p1, a				;move the received character to P1(LED)
 	sjmp loop
 	
 init:
