@@ -21,6 +21,7 @@ init:
 	mov tcon, #40h			;run timer 1
 	mov th1, #0fdh			;set 9600 baud with xtal=11.059MHz, SMOD = 0
 	mov scon, #50h			;set to 8 bit mode 1
+	mov 42h, #41h			;set counter to 65
 	ret						;return from subroutine
 	
 getchr:
@@ -29,6 +30,7 @@ getchr:
 	mov a, sbuf				;get character from serial data buffer to accumulator
 	anl a, #7fh				;mask off 8th bit
 	clr ri					;clear receive status flag
+	lcall crlf				;call the counter
 	ret
 
 
@@ -39,5 +41,17 @@ sndchr:
 txloop:
 	jnb scon.1, txloop		;if scon.1 is not set, jump to txloop
 	ret
+
+crlf:
+	djnz 42h, bypass		;if 40h is not zero, jump to bypass
+	mov 43h, a				;store the user input temporarily in B
+	mov a, #0Ah				;store carriage return in A
+	lcall sndchr			;send character in A
+	mov a, #0dh				;store line feed in A
+	lcall sndchr			;send character in A
+	mov a, 43h				;move the user input back to A
+	mov 42h, #41h			;set counter to 65
+bypass:
+	ret						;return from subroutine
 	
 	
