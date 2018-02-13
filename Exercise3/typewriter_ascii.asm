@@ -43,7 +43,7 @@ txloop:
 	ret
 
 crlf:
-	djnz 42h, bypass		;if 40h is not zero, jump to bypass
+	djnz 42h, bypass		;if 42h is not zero, jump to bypass
 	mov 43h, a				;store the user input temporarily in B
 	mov a, #0Ah				;store carriage return in A
 	lcall sndchr			;send character in A
