@@ -1,0 +1,41 @@
+                            ;6.115 Lab1 Exercise 2
+                   ;The main loop or body of the typewriter program
+                   ;Albert Wu
+                   
+0000:              .org 00h                                         ;power up a
+0000: 02 01 00         ljmp start                           ;jump to the beginn
+                                                                            ;wh
+0100:              .org 100h                                        ;set vector
+                   start:                                           
+0100: 12 01 0B         lcall init                           ;call subroutine "i
+                            loop:                                   ;loop over
+0103: 12 01 18                lcall getchr                  ;call subroutine "g
+0106: 12 01 22                lcall sndchr                  ;call subroutine "s
+0109: 80 F8                 sjmp loop
+                            
+                   init:
+                   ;set up serial port with 11.0592 MHz crystal
+                   ;use timer 1 for 9600 baud serial communication
+010B: 75 89 20              mov tmod, #20h                  ;MCS-51 Programmer'
+010E: 75 88 40              mov tcon, #40h                  ;run timer 1
+0111: 75 8D FD              mov th1, #0fdh                  ;set 9600 baud with
+0114: 75 98 50              mov scon, #50h                  ;set to 8 bit mode 
+0117: 22                    ret                                             ;re
+                            
+                   getchr:
+                   ;gets a character from PC using serial. RI is SCON.0. ASCII 
+0118: 30 98 FD              jnb ri, getchr                  ;if ri is not set, 
+011B: E5 99                 mov a, sbuf                             ;get charac
+011D: 54 7F                 anl a, #7fh                             ;mask off 8
+011F: C2 98                 clr ri                                  ;clear rece
+0121: 22                    ret
+                   
+                   
+                   sndchr:
+                   ;sends a character to PC using serial. Sends the character i
+0122: C2 99                 clr scon.1                              ;clear the 
+0124: F5 99                 mov sbuf, a                             ;move a cha
+                   txloop:
+0126: 30 99 FD              jnb scon.1, txloop              ;if scon.1 is not s
+0129: 22                    ret
+                            
